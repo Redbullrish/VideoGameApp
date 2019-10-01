@@ -57,7 +57,7 @@ ROOT_URLCONF = 'videogameapp.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['/Users/sharvilkekre/Documents/Programming/VideoGameApp/Query/templates'],
+        'DIRS': [os.path.join(BASE_DIR, 'Query/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
