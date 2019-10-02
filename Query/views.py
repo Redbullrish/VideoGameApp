@@ -1,4 +1,5 @@
 import os
+import sys
 import pandas as pd
 import queue as Q
 import math
@@ -6,6 +7,8 @@ from django.shortcuts import render
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+AVG_CRIT = 0.068
+AVG_USR = 0.071
 
 class VG:
 
@@ -14,25 +17,46 @@ class VG:
         self.genre = genre
         self.dev = dev
 
+def isfloat(x):
+    try:
+        a = float(x)
+    except ValueError:
+        return False
+    else:
+        return True
+
 def index(request):
-    df = pd.read_csv(os.path.join(BASE_DIR, 'Query/data/video_game.csv'))
-    game = VG("Wii","Sports","Nintendo")
+    df = pd.read_csv(os.path.join(BASE_DIR, "Query/data/video_game.csv"))
+    game = VG("PC","Shooter","")
+    pq = recommend(df,game)
+
+    for i in range(10):
+        print(pq.get()[1])
+    df.set_index("Name", inplace=True)
+    return render(request, 'index.html')
+
+def recommend(df,game):
     pq = Q.PriorityQueue()
-    lu = 0
-    lc = 0
-    us = 0
-    cs = 0
+
     for index, row in df.iterrows():
         console_score = 1 if row['Platform'] == game.platform else 0
         genre_score = 1 if row['Genre'] == game.genre else 0
         dev_score = 1 if row['Publisher'] == game.dev else 0
+
         critic_score = float(row['Critic_Score'])/1000.0
         if math.isnan(critic_score):
-            critic_score = 0.0
-        score = console_score + genre_score + dev_score + critic_score
+            critic_score = AVG_CRIT
+
+        u = str(row['User_Score'])
+        if isfloat(u) and not math.isnan(float(u)):
+            s = float(row['User_Score'])
+            user_score = s/100.0
+        else:
+            user_score = AVG_USR
+        
+        score = console_score + genre_score + dev_score + critic_score + user_score
         name = str(row['Name'])
         pq.put((-score,name))
+    
+    return pq
 
-    for i in range(10):
-        print(pq.get())
-    return render(request, 'index.html')
