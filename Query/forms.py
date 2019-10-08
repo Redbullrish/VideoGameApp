@@ -1,0 +1,29 @@
+import os
+
+from django import forms
+from django.core.exceptions import ValidationError
+from Query.choices import *
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+class GenreForm(forms.Form):
+    genre = forms.ChoiceField(choices=GENRE_CHOICES, label="", initial='', widget=forms.Select())
+
+
+    def clean_genre(self):
+        data = self.cleaned_data['genre']
+
+        genre_file = os.path.join(BASE_DIR, "Query/data/genre.txt")
+        genre_set = set()
+
+        with open(genre_file) as fp:
+            line = fp.readline()
+            while line:
+                genre_set.add(line[:-1])
+                line = fp.readline()
+        
+        if data not in genre_set:
+            raise ValidationError(_('Invalid genre'))
+        
+        return data
+

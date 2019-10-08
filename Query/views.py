@@ -3,7 +3,11 @@ import sys
 import pandas as pd
 import queue as Q
 import math
-from django.shortcuts import render
+
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+from django.shortcuts import render, get_object_or_404
+from Query.forms import GenreForm
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -17,6 +21,16 @@ class VG:
         self.genre = genre
         self.dev = dev
 
+# Function to render Django forms
+def query(request):
+
+    form = GenreForm()
+    context = {
+        'form':form,
+    }
+
+    return render(request, 'query.html', context)
+
 def isfloat(x):
     try:
         a = float(x)
@@ -25,9 +39,9 @@ def isfloat(x):
     else:
         return True
 
-def index(request):
+def ingest(request):
     df = pd.read_csv(os.path.join(BASE_DIR, "Query/data/video_game.csv"))
-    game = VG("PC","Shooter","")
+    game = VG("PC","Puzzle","")
     pq = recommend(df,game)
 
     for i in range(10):
@@ -59,4 +73,3 @@ def recommend(df,game):
         pq.put((-score,name))
     
     return pq
-
