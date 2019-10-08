@@ -23,7 +23,7 @@ class GenreForm(forms.Form):
                 line = fp.readline()
         
         if data not in genre_set:
-            raise ValidationError(_('Invalid genre'))
+            raise ValidationError(('Invalid genre'))
         
         return data
 
