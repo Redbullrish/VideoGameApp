@@ -1,2 +1,2 @@
 # VideoGameApp
-An web application to match interested gamers to their right games. 
+An web application to match interested gamers to their favorite games. 
