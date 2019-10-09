@@ -27,8 +27,8 @@ def query(request):
     if request.method == 'POST':
         form = QueryForm(request.POST)
         if form.is_valid():
-            print(form.cleaned_data['genre'])
-            print(form.cleaned_data['platform'])
+            games = recommend(form.cleaned_data['genre'],form.cleaned_data['platform'])
+            print(games)
     else:
         form = QueryForm()
         context = {
@@ -45,17 +45,19 @@ def isfloat(x):
     else:
         return True
 
-def ingest(request):
+
+def recommend(genre,platform):
     df = pd.read_csv(os.path.join(BASE_DIR, "Query/data/video_game.csv"))
-    game = VG("PC","Puzzle","")
-    pq = recommend(df,game)
+    game = VG(platform,genre,"")
+    pq = build_rank(df,game)
+    games = []
 
     for i in range(10):
-        print(pq.get()[1])
+        games.append(pq.get()[1])
     df.set_index("Name", inplace=True)
-    return render(request, 'index.html')
+    return games
 
-def recommend(df,game):
+def build_rank(df,game):
     pq = Q.PriorityQueue()
 
     for index, row in df.iterrows():
