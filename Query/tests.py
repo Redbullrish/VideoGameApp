@@ -15,5 +15,16 @@ class FormTestCase(TestCase):
                 genre_set.add(line[:-1])
                 line = fp.readline()
         
-        print(genre_set)
         self.assertEqual(len(genre_set), 12)
+    
+    def test_platform_read(self):
+        plat_file = os.path.join(BASE_DIR, "Query/data/platform.txt")
+        plat_set = set()
+
+        with open(plat_file) as fp:
+            line = fp.readline()
+            while line:
+                plat_set.add(line[:-1])
+                line = fp.readline()
+        
+        self.assertEqual(len(plat_set), 31)

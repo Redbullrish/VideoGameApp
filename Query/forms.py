@@ -27,3 +27,22 @@ class GenreForm(forms.Form):
         
         return data
 
+class PlatForm(forms.Form):
+    platform = forms.ChoiceField(choices=PLATFORM_CHOICES, label="", initial='', widget=forms.Select())
+
+    def clean_plat(self):
+        data = self.cleaned_data['platform']
+
+        plat_file = os.path.join(BASE_DIR, "Query/data/platform.txt")
+        plat_set = set()
+
+        with open(plat_file) as fp:
+            line = fp.readline()
+            while line:
+                plat_set.add(line[:-1])
+                line = fp.readline()
+        
+        if data not in plat_set:
+            raise ValidationError(('Invalid genre'))
+        
+        return data

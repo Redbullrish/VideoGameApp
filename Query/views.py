@@ -7,7 +7,7 @@ import math
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.shortcuts import render, get_object_or_404
-from Query.forms import GenreForm
+from Query.forms import GenreForm,PlatForm
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -24,9 +24,11 @@ class VG:
 # Function to render Django forms
 def query(request):
 
-    form = GenreForm()
+    genre_form = GenreForm()
+    plat_form = PlatForm()
     context = {
-        'form':form,
+        'gform':genre_form,
+        'pform':plat_form,
     }
 
     return render(request, 'query.html', context)
