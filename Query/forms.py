@@ -6,7 +6,8 @@ from Query.choices import *
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-class GenreForm(forms.Form):
+class QueryForm(forms.Form):
+    platform = forms.ChoiceField(choices=PLATFORM_CHOICES, label="", initial='', widget=forms.Select())
     genre = forms.ChoiceField(choices=GENRE_CHOICES, label="", initial='', widget=forms.Select())
 
 
@@ -26,9 +27,6 @@ class GenreForm(forms.Form):
             raise ValidationError(('Invalid genre'))
         
         return data
-
-class PlatForm(forms.Form):
-    platform = forms.ChoiceField(choices=PLATFORM_CHOICES, label="", initial='', widget=forms.Select())
 
     def clean_plat(self):
         data = self.cleaned_data['platform']
