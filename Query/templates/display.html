@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<body>
+    {% block content %}
+    <h1>Display</h1>
+    <div>
+        <ol>
+            {%for g in games%}
+                <li>{{g}}</li>
+            {% endfor %}
+        </ol>
+    </div>
+        
+    {% endblock %}
+</body>
+</html>

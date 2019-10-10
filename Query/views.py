@@ -28,7 +28,10 @@ def query(request):
         form = QueryForm(request.POST)
         if form.is_valid():
             games = recommend(form.cleaned_data['genre'],form.cleaned_data['platform'])
-            print(games)
+            context = {
+                'games':games,
+            }
+            return render(request, 'display.html', context)
     else:
         form = QueryForm()
         context = {
